@@ -320,11 +320,128 @@ svg{
 }
 
 @media(max-width:850px){
-  .main-logo{width:160px}
-  .board-wrap{
-    transform:scale(.72);
-    margin:-70px auto;
+  body{
+    display:block;
+    min-height:100svh;
+    overflow-x:hidden;
   }
+
+  .page{
+    width:100%;
+    max-width:100%;
+    padding:12px;
+    overflow:hidden;
+  }
+
+  .main-logo{
+    width:135px;
+    margin:0 auto 10px;
+  }
+
+  .toolbar{
+    gap:8px;
+    margin-bottom:8px;
+  }
+
+  .panel{
+    width:100%;
+    gap:8px;
+    padding:8px;
+    border-radius:16px;
+  }
+
+  .panel .btn{
+    flex:1 1 120px;
+    padding:9px 10px;
+    font-size:15px;
+  }
+
+  .panel select{
+    flex:1 1 72px;
+    min-width:72px;
+    padding:8px;
+    font-size:15px;
+  }
+
+  .timer-box{
+    font-size:28px;
+    margin:6px 0 0;
+  }
+
+  .board-wrap{
+    width:100%;
+    height:auto;
+    margin:0 auto 4px;
+    transform:none;
+  }
+
+  .board-glow{
+    width:88vw;
+    height:66vw;
+    filter:blur(22px);
+    opacity:.34;
+  }
+
+  svg{
+    width:98vw;
+    height:auto;
+    max-width:780px;
+  }
+
+  .btn#resetBtn{
+    width:100%;
+    max-width:280px;
+    margin-top:4px;
+  }
+
+  .modal-box{
+    width:92%;
+    max-width:520px;
+    max-height:88svh;
+    overflow:auto;
+    padding:22px;
+    border-radius:26px;
+  }
+
+  .modal-box h2{
+    font-size:28px;
+    margin-bottom:14px;
+  }
+
+  .modal-box p{
+    font-size:19px;
+  }
+
+  .start-grid{
+    gap:10px;
+  }
+
+  .start-row{
+    padding:12px;
+  }
+
+  .start-row input,
+  input,
+  select{
+    font-size:16px;
+  }
+
+  .palette{
+    justify-content:center;
+  }
+
+  .color-choice{
+    width:42px;
+    height:42px;
+  }
+}
+
+@media(max-width:420px){
+  .main-logo{width:120px}
+  .timer-box{font-size:24px}
+  .panel span{font-size:14px}
+  .btn{font-size:15px}
+  .letter{font-size:37px}
 }
 </style>
 </head>
