@@ -145,9 +145,12 @@ input,select{
 
 .timer-box{
   font-size:34px;
-  font-weight:800;
+  line-height:1;
+  font-weight:900;
   color:var(--gold);
-  margin:4px 0 -18px;
+  margin:0;
+  letter-spacing:1px;
+  text-shadow:0 0 18px rgba(212,175,55,.35);
 }
 
 .board-wrap{
@@ -319,6 +322,186 @@ svg{
   line-height:1.8;
 }
 
+
+.winner-icon{
+  font-size:64px;
+  line-height:1;
+  margin-bottom:12px;
+  filter:drop-shadow(0 0 24px rgba(212,175,55,.8));
+}
+
+#winnerText{
+  font-size:34px;
+  font-weight:900;
+  color:#fde68a;
+  margin:8px 0 8px;
+}
+
+.winner-sub{
+  font-size:20px;
+  opacity:.9;
+  margin-bottom:20px;
+}
+
+.match-score{
+  width:min(1040px,96vw);
+  margin:12px auto 4px;
+  display:grid;
+  grid-template-columns:minmax(190px,1fr) minmax(170px,230px) minmax(190px,1fr);
+  align-items:center;
+  gap:14px;
+  color:var(--text);
+
+  background:rgba(255,255,255,.065);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:28px;
+  padding:12px 16px;
+  box-shadow:0 18px 46px rgba(0,0,0,.22);
+  backdrop-filter:blur(14px);
+}
+
+.score-pill{
+  min-width:0;
+  padding:12px 18px;
+  border-radius:20px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  font-weight:900;
+  box-shadow:0 12px 30px rgba(0,0,0,.18);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.score-pill .num{
+  display:inline-block;
+  margin-inline-start:10px;
+  color:#fde68a;
+  font-size:26px;
+  vertical-align:middle;
+}
+
+.hud-center{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+
+.round-pill{
+  min-width:155px;
+  padding:7px 12px;
+  border-radius:16px;
+  background:rgba(212,175,55,.12);
+  border:1px solid rgba(212,175,55,.28);
+  font-weight:900;
+  color:#fde68a;
+  font-size:15px;
+}
+
+.match-options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.match-option{
+  display:block;
+  cursor:pointer;
+}
+
+.match-option input{
+  display:none;
+}
+
+.match-option span{
+  display:block;
+  padding:12px 10px;
+  border-radius:16px;
+  background:rgba(255,255,255,.08);
+  border:2px solid rgba(255,255,255,.14);
+  text-align:center;
+  font-weight:900;
+  transition:.2s;
+}
+
+.match-option input:checked + span{
+  border-color:#fde68a;
+  box-shadow:0 0 18px rgba(253,230,138,.45);
+  color:#fde68a;
+}
+
+.flame{
+  position:fixed;
+  bottom:-30px;
+  z-index:155;
+  pointer-events:none;
+  font-size:34px;
+  animation:flameRise 2.2s ease-out forwards;
+  filter:drop-shadow(0 0 14px #f97316);
+}
+
+@keyframes flameRise{
+  0%{transform:translateY(0) scale(.8) rotate(0deg); opacity:0}
+  15%{opacity:1}
+  100%{transform:translateY(-72vh) scale(1.45) rotate(24deg); opacity:0}
+}
+
+
+.action-row{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.confetti{
+  position:fixed;
+  top:-12px;
+  width:10px;
+  height:16px;
+  border-radius:3px;
+  z-index:150;
+  pointer-events:none;
+  animation:confettiFall 2.8s linear forwards;
+}
+
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0deg); opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg); opacity:0}
+}
+
+body.presentation .toolbar,
+body.presentation .page > .action-row{
+  display:none;
+}
+
+body.presentation .page{
+  max-width:100vw;
+}
+
+body.presentation .main-logo{
+  width:155px;
+  margin-bottom:4px;
+}
+
+body.presentation .timer-box{
+  margin:0 0 -25px;
+}
+
+.presentation-exit{
+  display:none;
+  position:fixed;
+  bottom:18px;
+  left:18px;
+  z-index:80;
+}
+
+body.presentation .presentation-exit{
+  display:block;
+}
+
 @media(max-width:850px){
   body{
     display:block;
@@ -366,6 +549,34 @@ svg{
   .timer-box{
     font-size:28px;
     margin:6px 0 0;
+  }
+
+  .match-score{
+    width:100%;
+    grid-template-columns:1fr;
+    margin:8px auto 0;
+    gap:8px;
+    padding:10px;
+  }
+
+  .hud-center{
+    order:-1;
+  }
+
+  .score-pill{
+    width:100%;
+    min-width:0;
+    padding:8px 10px;
+    font-size:15px;
+  }
+
+  .round-pill{
+    width:auto;
+    min-width:150px;
+  }
+
+  .match-options{
+    grid-template-columns:1fr;
   }
 
   .board-wrap{
@@ -468,14 +679,27 @@ svg{
     </div>
   </div>
 
-  <div class="timer-box" id="timerDisplay">00:30</div>
+  <div class="match-score" id="matchScore">
+    <div class="score-pill" id="tbScorePill">فوق/تحت <span class="num" id="tbWins">0</span></div>
+    <div class="hud-center">
+      <div class="timer-box" id="timerDisplay">00:30</div>
+      <div class="round-pill" id="roundInfo">جولة 1</div>
+    </div>
+    <div class="score-pill" id="lrScorePill">يمين/يسار <span class="num" id="lrWins">0</span></div>
+  </div>
 
   <div class="board-wrap">
     <div class="board-glow"></div>
     <svg id="svgBoard" viewBox="0 0 780 580"></svg>
   </div>
 
-  <button class="btn" id="resetBtn" onclick="confirmReset()">إعادة اللعبة</button>
+  <div class="action-row">
+    <button class="btn" onclick="newBoard()">خلية جديدة</button>
+    <button class="btn" onclick="togglePresentation()">وضع العرض</button>
+    <button class="btn" id="resetBtn" onclick="confirmReset()">إعادة اللعبة</button>
+  </div>
+
+  <button class="btn presentation-exit" onclick="togglePresentation()">خروج العرض</button>
 
 </div>
 
@@ -495,6 +719,15 @@ svg{
         <input id="teamLRName" value="الفريق البرتقالي">
         <div class="palette" id="paletteLR"></div>
       </div>
+
+      <div class="start-row">
+        <label>نظام الجولات</label>
+        <div class="match-options">
+          <label class="match-option"><input type="radio" name="matchMode" value="1" checked><span>جولة واحدة</span></label>
+          <label class="match-option"><input type="radio" name="matchMode" value="3"><span>3 جولات</span></label>
+          <label class="match-option"><input type="radio" name="matchMode" value="5"><span>5 جولات</span></label>
+        </div>
+      </div>
     </div>
 
     <br>
@@ -512,9 +745,15 @@ svg{
 
 <div class="modal" id="winnerModal">
   <div class="modal-box">
-    <h2>🎉 انتهت المسابقة 🎉</h2>
+    <div class="winner-icon">🏆</div>
+    <h2>انتهت المسابقة</h2>
     <p id="winnerText"></p>
-    <button class="btn" onclick="resetGame()">لعبة جديدة</button>
+    <div class="winner-sub" id="winnerSub">تهانينا للفريق الفائز</div>
+    <div class="action-row">
+      <button class="btn" id="nextRoundBtn" onclick="newRoundFromWinner()">الجولة التالية</button>
+      <button class="btn" onclick="document.getElementById('winnerModal').classList.remove('show')">إغلاق</button>
+      <button class="btn" onclick="resetGame()">إعادة كاملة</button>
+    </div>
   </div>
 </div>
 
@@ -558,12 +797,22 @@ let gameStarted = false;
 let timerInterval = null;
 let remainingSeconds = 30;
 let resetArmed = false;
+let totalRounds = 1;
+let targetWins = 1;
+let currentRound = 1;
+let tbRoundWins = 0;
+let lrRoundWins = 0;
+let matchOver = false;
 
 setupDropdowns();
 renderPalettes();
 createBoard();
 updateTimerDisplay();
 applyTeamColors();
+updateMatchScore();
+
+document.getElementById("teamTBName").addEventListener("input", updateMatchScore);
+document.getElementById("teamLRName").addEventListener("input", updateMatchScore);
 
 function setupDropdowns(){
   const m = document.getElementById("minutes");
@@ -628,8 +877,25 @@ function applyTeamColors(){
   document.documentElement.style.setProperty("--teamLR", selectedLRColor);
 }
 
+function updateMatchScore(){
+  const tb = document.getElementById("teamTBName")?.value || "فوق/تحت";
+  const lr = document.getElementById("teamLRName")?.value || "يمين/يسار";
+
+  document.getElementById("tbScorePill").innerHTML = `${tb} <span class="num" id="tbWins">${tbRoundWins}</span>`;
+  document.getElementById("lrScorePill").innerHTML = `${lr} <span class="num" id="lrWins">${lrRoundWins}</span>`;
+  document.getElementById("roundInfo").textContent = totalRounds === 1 ? "جولة واحدة" : `جولة ${currentRound} من ${totalRounds}`;
+}
+
 function startGame(){
   applyTeamColors();
+
+  totalRounds = Number(document.querySelector('input[name="matchMode"]:checked').value);
+  targetWins = Math.floor(totalRounds / 2) + 1;
+  currentRound = 1;
+  tbRoundWins = 0;
+  lrRoundWins = 0;
+  matchOver = false;
+  updateMatchScore();
 
   document.getElementById("setupModal").classList.remove("show");
 
@@ -637,7 +903,7 @@ function startGame(){
   const lr = document.getElementById("teamLRName").value || "الفريق الثاني";
 
   document.getElementById("rulesText").innerHTML =
-    `${tb}: من فوق لتحت<br>${lr}: من يمين ليسار`;
+    `${tb}: من فوق لتحت<br>${lr}: من يمين ليسار<br><br>نظام المباراة: ${totalRounds === 1 ? "جولة واحدة" : totalRounds + " جولات"}<br>الفائز يحتاج ${targetWins} ${targetWins === 1 ? "فوز" : "انتصارات"}`;
 
   document.getElementById("rulesModal").classList.add("show");
 }
@@ -657,6 +923,9 @@ function shuffle(array){
 }
 
 function createBoard(){
+  svg.innerHTML = "";
+  cellMap.clear();
+
   const letters = shuffle(lettersPool);
   let index = 0;
 
@@ -757,7 +1026,7 @@ function checkWinner(team){
     for(const start of leftSide){
       const path = findPath(start,rightSide,team);
       if(path){
-        showWinner(document.getElementById("teamLRName").value, path);
+        showWinner(document.getElementById("teamLRName").value, path, "teamLR");
         return true;
       }
     }
@@ -775,7 +1044,7 @@ function checkWinner(team){
     for(const start of topSide){
       const path = findPath(start,bottomSide,team);
       if(path){
-        showWinner(document.getElementById("teamTBName").value, path);
+        showWinner(document.getElementById("teamTBName").value, path, "teamTB");
         return true;
       }
     }
@@ -839,17 +1108,91 @@ function getNeighbors(cell){
     .filter(Boolean);
 }
 
-function showWinner(teamName,path){
+function showWinner(teamName,path,teamKey){
+  if(gameOver) return;
+
   gameOver = true;
   pauseTimer();
 
   path.forEach(cell => cell.classList.add("win"));
 
-  document.getElementById("winnerText").textContent = `فاز ${teamName}!`;
+  if(teamKey === "teamTB") tbRoundWins++;
+  if(teamKey === "teamLR") lrRoundWins++;
+
+  const reachedTarget = teamKey === "teamTB" ? tbRoundWins >= targetWins : lrRoundWins >= targetWins;
+  matchOver = reachedTarget || totalRounds === 1;
+
+  updateMatchScore();
+
+  if(matchOver){
+    document.getElementById("winnerText").textContent = `فاز ${teamName} بالمباراة!`;
+    document.getElementById("winnerSub").textContent = `النتيجة: ${tbRoundWins} - ${lrRoundWins}`;
+    document.getElementById("nextRoundBtn").textContent = "مباراة جديدة";
+  }else{
+    document.getElementById("winnerText").textContent = `فاز ${teamName} بالجولة!`;
+    document.getElementById("winnerSub").textContent = `النتيجة: ${tbRoundWins} - ${lrRoundWins}`;
+    document.getElementById("nextRoundBtn").textContent = "الجولة التالية";
+  }
+
+  launchConfetti();
+  launchFire();
 
   setTimeout(() => {
     document.getElementById("winnerModal").classList.add("show");
-  },600);
+  },650);
+}
+
+function launchConfetti(){
+  const palette = [selectedTBColor, selectedLRColor, "#D4AF37", "#FDE68A", "#FFFFFF"];
+
+  for(let i = 0; i < 180; i++){
+    const piece = document.createElement("div");
+    piece.className = "confetti";
+    piece.style.left = Math.random() * 100 + "vw";
+    piece.style.background = palette[Math.floor(Math.random() * palette.length)];
+    piece.style.animationDelay = Math.random() * .7 + "s";
+    piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+    document.body.appendChild(piece);
+
+    setTimeout(() => piece.remove(), 4200);
+  }
+}
+
+function launchFire(){
+  for(let i = 0; i < 46; i++){
+    const flame = document.createElement("div");
+    flame.className = "flame";
+    flame.textContent = Math.random() > .35 ? "🔥" : "✨";
+    flame.style.left = Math.random() * 100 + "vw";
+    flame.style.animationDelay = Math.random() * .8 + "s";
+    flame.style.fontSize = (24 + Math.random() * 30) + "px";
+    document.body.appendChild(flame);
+    setTimeout(() => flame.remove(), 3300);
+  }
+}
+
+function newRoundFromWinner(){
+  document.getElementById("winnerModal").classList.remove("show");
+
+  if(matchOver){
+    resetGame();
+    return;
+  }
+
+  currentRound++;
+  newBoard();
+  updateMatchScore();
+}
+
+function newBoard(){
+  pauseTimer();
+  gameOver = false;
+  gameStarted = true;
+  resetArmed = false;
+  document.getElementById("resetBtn").textContent = "إعادة اللعبة";
+  document.getElementById("winnerModal").classList.remove("show");
+  createBoard();
+  updateMatchScore();
 }
 
 function startTimer(){
@@ -916,6 +1259,10 @@ function toggleFullscreen(){
   }else{
     document.exitFullscreen();
   }
+}
+
+function togglePresentation(){
+  document.body.classList.toggle("presentation");
 }
 </script>
 
