@@ -343,6 +343,94 @@ svg{
   margin-bottom:20px;
 }
 
+
+.question-card{
+  position:relative;
+  text-align:center;
+}
+
+.close-x{
+  position:absolute;
+  top:16px;
+  left:16px;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.1);
+  color:white;
+  font-size:26px;
+  line-height:1;
+  cursor:pointer;
+  font-family:'Thmanyah',sans-serif;
+}
+
+.question-letter{
+  width:92px;
+  height:104px;
+  margin:10px auto 18px;
+  clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);
+  background:linear-gradient(145deg,#fde68a,#d4af37);
+  color:#111827;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:48px;
+  font-weight:900;
+  filter:drop-shadow(0 0 18px rgba(212,175,55,.55));
+}
+
+.answer-title{
+  color:#cbd5e1;
+  font-size:20px;
+  margin:4px 0 18px;
+}
+
+.answer-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.answer-btn{
+  min-height:64px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:20px;
+  color:white;
+  font-size:20px;
+  font-weight:900;
+  font-family:'Thmanyah',sans-serif;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.answer-btn:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.08);
+}
+
+.answer-tb{
+  background:var(--teamTB);
+  box-shadow:0 0 20px color-mix(in srgb, var(--teamTB) 70%, transparent);
+}
+
+.answer-lr{
+  background:var(--teamLR);
+  box-shadow:0 0 20px color-mix(in srgb, var(--teamLR) 70%, transparent);
+}
+
+@media(max-width:850px){
+  .answer-buttons{
+    grid-template-columns:1fr;
+  }
+
+  .question-letter{
+    width:78px;
+    height:88px;
+    font-size:42px;
+  }
+}
+
 .match-score{
   width:min(1040px,96vw);
   margin:12px auto 4px;
@@ -743,6 +831,21 @@ body.presentation .presentation-exit{
   </div>
 </div>
 
+
+
+<div class="modal" id="questionModal">
+  <div class="modal-box question-card">
+    <button class="close-x" onclick="closeQuestionModal()">×</button>
+    <h2>سؤال بحرف</h2>
+    <div class="question-letter" id="questionLetter">؟</div>
+    <div class="answer-title">من أجاب السؤال؟</div>
+    <div class="answer-buttons">
+      <button class="answer-btn answer-tb" id="answerTBBtn" onclick="awardSelectedCell('teamTB')">فريق فوق / تحت</button>
+      <button class="answer-btn answer-lr" id="answerLRBtn" onclick="awardSelectedCell('teamLR')">فريق يمين / يسار</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="winnerModal">
   <div class="modal-box">
     <div class="winner-icon">🏆</div>
@@ -791,6 +894,7 @@ const startY = 85;
 
 const svg = document.getElementById("svgBoard");
 const cellMap = new Map();
+let activeCell = null;
 
 let gameOver = false;
 let gameStarted = false;
@@ -957,7 +1061,7 @@ function createBoard(){
 
       g.appendChild(polygon);
       g.appendChild(text);
-      g.onclick = () => changeCellState(g);
+      g.onclick = () => openQuestionModal(g);
 
       svg.appendChild(g);
       cellMap.set(`${row},${col}`,g);
@@ -976,39 +1080,47 @@ function getHexPoints(cx,cy,r){
   return points.join(" ");
 }
 
-function changeCellState(cell){
+function openQuestionModal(cell){
   if(gameOver || !gameStarted) return;
 
-  let state = Number(cell.dataset.state);
+  activeCell = cell;
+  document.querySelectorAll(".cell").forEach(c => c.classList.remove("selected"));
+  cell.classList.add("selected");
 
-  cell.classList.remove("selected","teamLR","teamTB","win");
+  const letterNode = cell.querySelector(".letter");
+  const letter = letterNode ? letterNode.textContent : "؟";
+  const tbName = document.getElementById("teamTBName").value || "فريق فوق / تحت";
+  const lrName = document.getElementById("teamLRName").value || "فريق يمين / يسار";
 
-  state++;
-  if(state > 3) state = 0;
+  document.getElementById("questionLetter").textContent = letter;
+  document.getElementById("answerTBBtn").textContent = tbName;
+  document.getElementById("answerLRBtn").textContent = lrName;
+  document.getElementById("questionModal").classList.add("show");
+}
 
-  if(state === 1){
-    cell.classList.add("selected");
-    cell.dataset.owner = "";
+function closeQuestionModal(){
+  document.getElementById("questionModal").classList.remove("show");
+
+  if(activeCell){
+    activeCell.classList.remove("selected");
   }
 
-  if(state === 2){
-    cell.classList.add("teamLR");
-    cell.dataset.owner = "teamLR";
-  }
+  activeCell = null;
+}
 
-  if(state === 3){
-    cell.classList.add("teamTB");
-    cell.dataset.owner = "teamTB";
-  }
+function awardSelectedCell(team){
+  if(!activeCell || gameOver) return;
 
-  if(state === 0){
-    cell.dataset.owner = "";
-  }
+  activeCell.classList.remove("selected","teamLR","teamTB","win");
+  activeCell.classList.add(team);
+  activeCell.dataset.owner = team;
+  activeCell.dataset.state = team === "teamLR" ? "2" : "3";
 
-  cell.dataset.state = state;
+  const awardedCell = activeCell;
+  activeCell = null;
+  document.getElementById("questionModal").classList.remove("show");
 
-  checkWinner("teamLR");
-  checkWinner("teamTB");
+  checkWinner(team);
 }
 
 function checkWinner(team){
